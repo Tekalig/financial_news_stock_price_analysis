@@ -1,0 +1,4 @@
+pandas~=2.2.3
+textblob~=0.18.0.post0
+scikit-learn~=1.6.0
+matplotlib~=3.9.4
