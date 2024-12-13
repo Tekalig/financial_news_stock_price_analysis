@@ -46,3 +46,7 @@ build/
 # Temporary files
 *.swp
 *.swo
+
+# source directory and data directory
+src/
+data/
