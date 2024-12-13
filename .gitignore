@@ -1,0 +1,48 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+env/
+venv/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# IDE and Editor settings
+.vscode/
+.idea/
+
+# Pytest
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Unit test reports
+test-reports/
+
+# Dependency directories
+node_modules/
+dist/
+build/
+*.egg-info/
+
+# Python packaging
+*.tar.gz
+*.whl
+*.egg
+
+# VS Code settings
+.vscode/
+
+# GitHub Actions
+.github/
+
+# Logs
+*.log
+
+# Temporary files
+*.swp
+*.swo
