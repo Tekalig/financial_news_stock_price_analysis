@@ -34,8 +34,6 @@ build/
 *.whl
 *.egg
 
-# VS Code settings
-.vscode/
 
 # GitHub Actions
 .github/
