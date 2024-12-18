@@ -37,3 +37,19 @@ def plot_macd(data, macd, macd_signal, macd_hist):
     plt.legend()
     plt.grid()
     plt.show()
+
+
+def plot_sentiment_vs_returns(merged_data):
+    """
+    Plot average sentiment scores against daily stock returns.
+
+    Args:
+        merged_data (pd.DataFrame): Merged dataset with 'average_sentiment' and 'daily_return'.
+    """
+    plt.figure(figsize=(10, 6))
+    plt.scatter(merged_data['average_sentiment'], merged_data['daily_return'], alpha=0.5)
+    plt.title('Sentiment vs. Stock Returns')
+    plt.xlabel('Average Sentiment Score')
+    plt.ylabel('Daily Stock Return')
+    plt.grid()
+    plt.show()
