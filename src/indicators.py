@@ -1,5 +1,6 @@
 import talib
 
+
 def calculate_moving_averages(data, period=30):
     """
     Calculate Simple Moving Average (SMA) for the given period.
@@ -11,7 +12,8 @@ def calculate_moving_averages(data, period=30):
     Returns:
         pd.Series: SMA values.
     """
-    return talib.SMA(data['Close'], timeperiod=period)
+    return talib.SMA(data["Close"], timeperiod=period)
+
 
 def calculate_rsi(data, period=14):
     """
@@ -24,7 +26,8 @@ def calculate_rsi(data, period=14):
     Returns:
         pd.Series: RSI values.
     """
-    return talib.RSI(data['Close'], timeperiod=period)
+    return talib.RSI(data["Close"], timeperiod=period)
+
 
 def calculate_macd(data):
     """
@@ -36,5 +39,7 @@ def calculate_macd(data):
     Returns:
         tuple: MACD, Signal Line, Histogram.
     """
-    macd, macd_signal, macd_hist = talib.MACD(data['Close'], fastperiod=12, slowperiod=26, signalperiod=9)
+    macd, macd_signal, macd_hist = talib.MACD(
+        data["Close"], fastperiod=12, slowperiod=26, signalperiod=9
+    )
     return macd, macd_signal, macd_hist

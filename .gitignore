@@ -47,3 +47,6 @@ build/
 
 # source directory and data directory
 data/
+
+# ignore screenshots directory
+screenshots/
