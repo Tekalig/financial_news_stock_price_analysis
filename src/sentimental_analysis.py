@@ -22,10 +22,12 @@ class SentimentAnalyzer:
             pd.DataFrame: The news data with sentiment scores and categories.
         """
         # Calculate sentiment polarity using TextBlob
-        self.news_data['sentiment'] = self.news_data['headline'].apply(lambda x: TextBlob(x).sentiment.polarity)
+        self.news_data["sentiment"] = self.news_data["headline"].apply(
+            lambda x: TextBlob(x).sentiment.polarity
+        )
         # Classify sentiment into positive, negative, or neutral
-        self.news_data['sentiment_category'] = self.news_data['sentiment'].apply(
-            lambda x: 'positive' if x > 0 else 'negative' if x < 0 else 'neutral'
+        self.news_data["sentiment_category"] = self.news_data["sentiment"].apply(
+            lambda x: "positive" if x > 0 else "negative" if x < 0 else "neutral"
         )
         return self.news_data
 
@@ -39,8 +41,8 @@ class SentimentAnalyzer:
         Returns:
             list: A list of the most common keywords.
         """
-        vectorizer = CountVectorizer(max_features=max_features, stop_words='english')
-        keywords_matrix = vectorizer.fit_transform(self.news_data['headline'])
+        vectorizer = CountVectorizer(max_features=max_features, stop_words="english")
+        keywords_matrix = vectorizer.fit_transform(self.news_data["headline"])
         keywords = vectorizer.get_feature_names_out()
         return keywords
 
@@ -48,12 +50,16 @@ class SentimentAnalyzer:
         """
         Display a pie chart showing the distribution of sentiment categories.
         """
-        sentiment_distribution = self.news_data['sentiment_category'].value_counts()
-        plt.figure(figsize=(8, 6))
-        plt.pie(sentiment_distribution, labels=sentiment_distribution.index, autopct='%1.1f%%', startangle=140)
-        plt.title('Sentiment Distribution of News Headlines')
-        plt.show()
-
+        sentiment_distribution = self.news_data["sentiment_category"].value_counts()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.pie(
+            sentiment_distribution,
+            labels=sentiment_distribution.index,
+            autopct="%1.1f%%",
+            startangle=140,
+        )
+        ax.set_title("Sentiment Distribution of News Headlines")
+        return fig
 
     def plot_publisher_activity(self):
         """
@@ -62,31 +68,39 @@ class SentimentAnalyzer:
         Args:
             news_data (pd.DataFrame): News data with 'publisher' and 'date' columns.
         """
-        self.news_data['date'] = pd.to_datetime(self.news_data['date'], errors='coerce')
+        self.news_data["date"] = pd.to_datetime(self.news_data["date"], errors="coerce")
 
         # Count the total number of articles per publisher
-        publisher_counts = self.news_data['publisher'].value_counts().index
+        publisher_counts = self.news_data["publisher"].value_counts().index
 
         # Filter for top publishers
-        filtered_data = self.news_data[self.news_data['publisher'].isin(publisher_counts)]
+        filtered_data = self.news_data[
+            self.news_data["publisher"].isin(publisher_counts)
+        ]
 
         # Group by date and publisher, and aggregate counts
-        grouped = filtered_data.groupby([pd.Grouper(key='date', freq='M'), 'publisher']).size().reset_index(
-            name='article_count')
+        grouped = (
+            filtered_data.groupby([pd.Grouper(key="date", freq="M"), "publisher"])
+            .size()
+            .reset_index(name="article_count")
+        )
 
         # Pivot the data for plotting
-        pivot_table = grouped.pivot(index='date', columns='publisher', values='article_count').fillna(0)
+        pivot_table = grouped.pivot(
+            index="date", columns="publisher", values="article_count"
+        ).fillna(0)
 
         # Plot a grouped bar plot
-        pivot_table.plot(kind='bar', stacked=False, figsize=(14, 8), width=0.8)
+        fig, ax = plt.subplots(figsize=(14, 8))
+        pivot_table.plot(kind="bar", stacked=False, width=0.8, ax=ax)
 
-        plt.title(f'Publisher Activity Over Time')
-        plt.xlabel('Date')
-        plt.ylabel('Number of Articles')
-        plt.legend(title='Publisher', bbox_to_anchor=(1.05, 1), loc='upper left')
+        ax.set_title("Publisher Activity Over Time")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Number of Articles")
+        ax.legend(title="Publisher", bbox_to_anchor=(1.05, 1), loc="upper left")
         plt.tight_layout()
-        plt.show()
 
+        return fig
 
     def calculate_publisher_sentiment(self):
         """
@@ -100,14 +114,13 @@ class SentimentAnalyzer:
         """
         # Group by publisher and calculate sentiment statistics
         sentiment_summary = (
-            self.news_data.groupby('publisher')['sentiment']
-            .agg(['mean', 'count'])
+            self.news_data.groupby("publisher")["sentiment"]
+            .agg(["mean", "count"])
             .reset_index()
-            .rename(columns={'mean': 'average_sentiment', 'count': 'article_count'})
+            .rename(columns={"mean": "average_sentiment", "count": "article_count"})
         )
 
         return sentiment_summary
-
 
     def plot_publisher_sentiment(self, sentiment_summary, top_n=10):
         """
@@ -118,17 +131,22 @@ class SentimentAnalyzer:
             top_n (int): Number of top publishers to display based on article count.
         """
         # Sort by article count and select top publishers
-        top_publishers = sentiment_summary.nlargest(top_n, 'article_count')
+        top_publishers = sentiment_summary.nlargest(top_n, "article_count")
 
         # Create a bar plot
-        plt.figure(figsize=(12, 6))
-        plt.bar(top_publishers['publisher'], top_publishers['average_sentiment'], color='skyblue')
-        plt.axhline(y=0, color='black', linestyle='--', linewidth=1, alpha=0.7)
-        plt.title(f'Publisher Sentiment Analysis (Top {top_n} Publishers)')
-        plt.xlabel('Publisher')
-        plt.ylabel('Average Sentiment Score')
-        plt.xticks(rotation=45, ha='right')
-        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.bar(
+            top_publishers["publisher"],
+            top_publishers["average_sentiment"],
+            color="skyblue",
+        )
+        ax.axhline(y=0, color="black", linestyle="--", linewidth=1, alpha=0.7)
+        ax.set_title(f"Publisher Sentiment Analysis (Top {top_n} Publishers)")
+        ax.set_xlabel("Publisher")
+        ax.set_ylabel("Average Sentiment Score")
+        ax.set_xticks(range(len(top_publishers["publisher"])))
+        ax.set_xticklabels(top_publishers["publisher"], rotation=45, ha="right")
+        ax.grid(axis="y", linestyle="--", alpha=0.7)
         plt.tight_layout()
-        plt.show()
 
+        return fig
