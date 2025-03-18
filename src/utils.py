@@ -3,7 +3,7 @@ import pandas as pd
 
 
 class StockDataLoader:
-    def __init__(self, data_folder="../src/data/yfinance_data"):
+    def __init__(self, data_folder="../data/yfinance_data"):
         """
         Initializes the StockDataLoader with the folder path containing the stock data CSV files.
 
