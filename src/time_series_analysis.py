@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from scripts.utils import StockDataLoader
 
 
 def plot_stock_data(stock_data, ticker):
@@ -11,14 +10,14 @@ def plot_stock_data(stock_data, ticker):
         stock_data (pd.DataFrame): The stock data containing 'Close' prices.
         ticker (str): The stock ticker (e.g., 'AAPL').
     """
-    plt.figure(figsize=(10, 6))
-    stock_data['Close'].plot(label=f'{ticker} Close Price', color='blue')
-    plt.title(f'{ticker} Stock Price Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Close Price')
-    plt.grid()
-    plt.legend()
-    plt.show()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    stock_data["Close"].plot(ax=ax, label=f"{ticker} Close Price", color="blue")
+    ax.set_title(f"{ticker} Stock Price Over Time")
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Close Price")
+    ax.grid()
+    ax.legend()
+    return fig
 
 
 def plot_time_series(data, title, xlabel, ylabel):
@@ -31,13 +30,13 @@ def plot_time_series(data, title, xlabel, ylabel):
         xlabel (str): The label for the x-axis.
         ylabel (str): The label for the y-axis.
     """
-    plt.figure(figsize=(10, 6))
-    data.plot(kind='line', marker='o')
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.grid()
-    plt.show()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    data.plot(kind="line", marker="o", ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid()
+    return fig
 
 
 class TimeSeriesAnalyzer:
@@ -57,8 +56,10 @@ class TimeSeriesAnalyzer:
         Returns:
             pd.Series: A series showing the number of articles published per day.
         """
-        self.news_data['date'] = pd.to_datetime(self.news_data['date'], errors='coerce')
-        publication_frequency = self.news_data.groupby(self.news_data['date'].dt.date).size()
+        self.news_data["date"] = pd.to_datetime(self.news_data["date"], errors="coerce")
+        publication_frequency = self.news_data.groupby(
+            self.news_data["date"].dt.date
+        ).size()
         return publication_frequency
 
     def analyze_publishing_times(self):
@@ -68,6 +69,6 @@ class TimeSeriesAnalyzer:
         Returns:
             pd.Series: A series showing the number of articles published per hour.
         """
-        self.news_data['hour'] = pd.to_datetime(self.news_data['date']).dt.hour
-        publishing_times = self.news_data['hour'].value_counts().sort_index()
+        self.news_data["hour"] = pd.to_datetime(self.news_data["date"]).dt.hour
+        publishing_times = self.news_data["hour"].value_counts().sort_index()
         return publishing_times
